@@ -1,12 +1,14 @@
 #!/bin/bash
 
-# 数据集路径
-DATASET_PATH='/home/slam/workspace/OAK_4_P/ORB_SMAL3/dataset/exp01/exp01_construction_ground_level'
+# 获取脚本所在目录
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+# 数据集路径（脚本所在目录的上一个目录/dataset/exp01/exp01_construction_ground_level）
+DATASET_PATH="$(dirname "$SCRIPT_DIR")/dataset/exp01/exp01_construction_ground_level"
 TIMESTAMPS_FILE="$DATASET_PATH/timestamps.txt"
 OUTPUT_NAME="exp01_construction_ground_level_multi"
 
-# 进入 OpenMAVIS 目录
-cd /home/suxin/WORK_SPACE/OAK_4_P/ORB_SMAL3/OpenMAVIS
+# 进入脚本所在目录（OpenMAVIS 目录）
+cd "$SCRIPT_DIR"
 
 # 检查时间戳文件是否存在，如果不存在则生成
 if [ ! -f "$TIMESTAMPS_FILE" ]; then

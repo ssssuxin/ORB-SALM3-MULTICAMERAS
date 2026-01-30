@@ -9,7 +9,7 @@ pathDatasetTUM_VI="$(dirname "$SCRIPT_DIR")/dataset"
 cd "$SCRIPT_DIR"
 
 echo "=========================================="
-echo "运行 TUM-VI Corridor 4 数据集"
+echo "运行 TUM-VI Room 4 数据集"
 echo "=========================================="
 echo ""
 echo "请选择运行模式："
@@ -24,34 +24,34 @@ case $choice in
     1)
         echo "启动单目模式..."
         ./Examples/Monocular/mono_tum_vi Vocabulary/ORBvoc.txt Examples/Monocular/TUM-VI.yaml \
-            "$pathDatasetTUM_VI"/dataset-corridor4_512_16/mav0/cam0/data \
-            Examples/Monocular/TUM_TimeStamps/dataset-corridor4_512.txt \
-            dataset-corridor4_512_mono
+            "$pathDatasetTUM_VI"/dataset-room4_512_16/mav0/cam0/data \
+            Examples/Monocular/TUM_TimeStamps/dataset-room4_512.txt \
+            dataset-room4_512_mono
         ;;
     2)
         echo "启动双目模式..."
         ./Examples/Stereo/stereo_tum_vi Vocabulary/ORBvoc.txt Examples/Stereo/TUM-VI.yaml \
-            "$pathDatasetTUM_VI"/dataset-corridor4_512_16/mav0/cam0/data \
-            "$pathDatasetTUM_VI"/dataset-corridor4_512_16/mav0/cam1/data \
-            Examples/Stereo/TUM_TimeStamps/dataset-corridor4_512.txt \
-            dataset-corridor4_512_stereo
+            "$pathDatasetTUM_VI"/dataset-room4_512_16/mav0/cam0/data \
+            "$pathDatasetTUM_VI"/dataset-room4_512_16/mav0/cam1/data \
+            Examples/Stereo/TUM_TimeStamps/dataset-room4_512.txt \
+            dataset-room4_512_stereo
         ;;
     3)
         echo "启动单目+IMU模式..."
         ./Examples/Monocular-Inertial/mono_inertial_tum_vi Vocabulary/ORBvoc.txt Examples/Monocular-Inertial/TUM_512.yaml \
-            "$pathDatasetTUM_VI"/dataset-corridor4_512_16/mav0/cam0/data \
-            Examples/Monocular-Inertial/TUM_TimeStamps/dataset-corridor4_512.txt \
-            Examples/Monocular-Inertial/TUM_IMU/dataset-corridor4_512.txt \
-            dataset-corridor4_512_monoi
+            "$pathDatasetTUM_VI"/dataset-room4_512_16/mav0/cam0/data \
+            Examples/Monocular-Inertial/TUM_TimeStamps/dataset-room4_512.txt \
+            Examples/Monocular-Inertial/TUM_IMU/dataset-room4_512.txt \
+            dataset-room4_512_monoi
         ;;
     4)
         echo "启动双目+IMU模式..."
         ./Examples/Stereo-Inertial/stereo_inertial_tum_vi Vocabulary/ORBvoc.txt Examples/Stereo-Inertial/TUM-VI.yaml \
-            "$pathDatasetTUM_VI"/dataset-corridor4_512_16/mav0/cam0/data \
-            "$pathDatasetTUM_VI"/dataset-corridor4_512_16/mav0/cam1/data \
-            Examples/Stereo-Inertial/TUM_TimeStamps/dataset-corridor4_512.txt \
-            Examples/Stereo-Inertial/TUM_IMU/dataset-corridor4_512.txt \
-            dataset-corridor4_512_stereoi
+            "$pathDatasetTUM_VI"/dataset-room4_512_16/mav0/cam0/data \
+            "$pathDatasetTUM_VI"/dataset-room4_512_16/mav0/cam1/data \
+            Examples/Stereo-Inertial/TUM_TimeStamps/dataset-room4_512.txt \
+            Examples/Stereo-Inertial/TUM_IMU/dataset-room4_512.txt \
+            dataset-room4_512_stereoi
         ;;
     *)
         echo "无效选项，退出..."
