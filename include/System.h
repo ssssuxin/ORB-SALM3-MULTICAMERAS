@@ -96,6 +96,7 @@ public:
         IMU_STEREO=4,
         IMU_RGBD=5,
         IMU_MULTI=6,
+        MULTI=7,
     };
 
     // File type

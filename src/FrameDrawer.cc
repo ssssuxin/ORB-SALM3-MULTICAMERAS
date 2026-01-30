@@ -635,7 +635,7 @@ void FrameDrawer::Update(Tracking *pTracker)
         pTracker->mImRight.copyTo(mImRight);
         N = mvCurrentKeys.size() + mvCurrentKeysRight.size();
     }
-    else if(mSensor==System::IMU_MULTI){
+    else if(mSensor==System::IMU_MULTI || mSensor==System::MULTI){
         mvCurrentKeysRight = pTracker->mCurrentFrame.mvKeysRight;
         mvCurrentKeysSideLeft = pTracker->mCurrentFrame.mvKeysSideLeft;
         mvCurrentKeysSideRight = pTracker->mCurrentFrame.mvKeysSideRight;

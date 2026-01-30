@@ -357,7 +357,7 @@ void Viewer::Run()
             cv::Mat imRight = mpFrameDrawer->DrawRightFrame(trackedImageScale);
             cv::hconcat(im,imRight,toShow);
         }
-        else if(mpTracker->mSensor == mpSystem->IMU_MULTI)
+        else if(mpTracker->mSensor == mpSystem->IMU_MULTI || mpTracker->mSensor == mpSystem->MULTI)
         {
             cv::Mat frontImgs, sideImgs;
             cv::Mat imRight = mpFrameDrawer->DrawRightFrame(trackedImageScale);

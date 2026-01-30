@@ -150,13 +150,13 @@ namespace ORB_SLAM3 {
         cout << "\t-Loaded camera 1" << endl;
 
         //Read second camera if stereo (not rectified)
-        if(sensor_ == System::STEREO || sensor_ == System::IMU_STEREO || sensor_ == System::IMU_MULTI){
+        if(sensor_ == System::STEREO || sensor_ == System::IMU_STEREO || sensor_ == System::IMU_MULTI || sensor_ == System::MULTI){
             readCamera2(fSettings);
             cout << "\t-Loaded camera 2" << endl;
         }
 
         //Read sidewards cameras if multi (not rectified)
-        if(sensor_ == System::IMU_MULTI){
+        if(sensor_ == System::IMU_MULTI || sensor_ == System::MULTI){
             readCamera3(fSettings);
             readCamera4(fSettings);
             cout << "\t-Loaded camera 3 & 4" << endl;
@@ -166,7 +166,7 @@ namespace ORB_SLAM3 {
         readImageInfo(fSettings);
         cout << "\t-Loaded image info" << endl;
 
-        if(sensor_ == System::IMU_MONOCULAR || sensor_ == System::IMU_STEREO || sensor_ == System::IMU_RGBD || sensor_ == System::IMU_MULTI){
+        if(sensor_ == System::IMU_MONOCULAR || sensor_ == System::IMU_STEREO || sensor_ == System::IMU_RGBD || sensor_ == System::IMU_MULTI || sensor_ == System::MULTI){
             readIMU(fSettings);
             cout << "\t-Loaded IMU calibration" << endl;
         }
@@ -277,7 +277,7 @@ namespace ORB_SLAM3 {
             calibration1_ = new KannalaBrandt8(vCalibration);
             originalCalib1_ = new KannalaBrandt8(vCalibration);
 
-            if(sensor_ == System::STEREO || sensor_ == System::IMU_STEREO || sensor_ == System::IMU_MULTI){
+            if(sensor_ == System::STEREO || sensor_ == System::IMU_STEREO || sensor_ == System::IMU_MULTI || sensor_ == System::MULTI){
                 int colBegin = readParameter<int>(fSettings,"Camera1.overlappingBegin",found);
                 int colEnd = readParameter<int>(fSettings,"Camera1.overlappingEnd",found);
                 vector<int> vOverlapping = {colBegin, colEnd};
@@ -295,7 +295,7 @@ namespace ORB_SLAM3 {
         bool found;
         vector<float> vCalibration;
         if (cameraType_ == PinHole) {
-            if (sensor_ != System::IMU_MULTI)
+            if (sensor_ != System::IMU_MULTI && sensor_ != System::MULTI)
                 bNeedToRectify_ = true;
 
             //Read intrinsic parameters
@@ -382,7 +382,7 @@ namespace ORB_SLAM3 {
         bool found;
         vector<float> vCalibration;
         if (cameraType_ == PinHole) {
-            if (sensor_ != System::IMU_MULTI)
+            if (sensor_ != System::IMU_MULTI && sensor_ != System::MULTI)
                 bNeedToRectify_ = true;
 
             //Read intrinsic parameters
@@ -452,7 +452,7 @@ namespace ORB_SLAM3 {
         bool found;
         vector<float> vCalibration;
         if (cameraType_ == PinHole) {
-            if (sensor_ != System::IMU_MULTI)
+            if (sensor_ != System::IMU_MULTI && sensor_ != System::MULTI)
                 bNeedToRectify_ = true;
 
             //Read intrinsic parameters
@@ -543,7 +543,7 @@ namespace ORB_SLAM3 {
                     calibration2_->setParameter(calibration2_->getParameter(1) * scaleRowFactor, 1);
                     calibration2_->setParameter(calibration2_->getParameter(3) * scaleRowFactor, 3);
 
-                    if (sensor_ == System::IMU_MULTI){
+                    if (sensor_ == System::IMU_MULTI || sensor_ == System::MULTI){
                         calibration3_->setParameter(calibration3_->getParameter(1) * scaleRowFactor, 1);
                         calibration3_->setParameter(calibration3_->getParameter(3) * scaleRowFactor, 3);
 
@@ -569,7 +569,7 @@ namespace ORB_SLAM3 {
                     calibration2_->setParameter(calibration2_->getParameter(0) * scaleColFactor, 0);
                     calibration2_->setParameter(calibration2_->getParameter(2) * scaleColFactor, 2);
 
-                    if (sensor_ == System::IMU_MULTI){
+                    if (sensor_ == System::IMU_MULTI || sensor_ == System::MULTI){
                         calibration3_->setParameter(calibration3_->getParameter(0) * scaleColFactor, 0);
                         calibration3_->setParameter(calibration3_->getParameter(2) * scaleColFactor, 2);
 
@@ -584,7 +584,7 @@ namespace ORB_SLAM3 {
                         static_cast<KannalaBrandt8*>(calibration2_)->mvLappingArea[0] *= scaleColFactor;
                         static_cast<KannalaBrandt8*>(calibration2_)->mvLappingArea[1] *= scaleColFactor;
 
-                        if (sensor_ == System::IMU_MULTI){
+                        if (sensor_ == System::IMU_MULTI || sensor_ == System::MULTI){
                             static_cast<KannalaBrandt8 *>(calibration3_)->mvLappingArea[0] *= scaleColFactor;
                             static_cast<KannalaBrandt8 *>(calibration3_)->mvLappingArea[1] *= scaleColFactor;
 
@@ -602,16 +602,17 @@ namespace ORB_SLAM3 {
 
     void Settings::readIMU(cv::FileStorage &fSettings) {
         bool found;
-        noiseGyro_ = readParameter<float>(fSettings,"IMU.NoiseGyro",found);
-        noiseAcc_ = readParameter<float>(fSettings,"IMU.NoiseAcc",found);
-        gyroWalk_ = readParameter<float>(fSettings,"IMU.GyroWalk",found);
-        accWalk_ = readParameter<float>(fSettings,"IMU.AccWalk",found);
-        imuFrequency_ = readParameter<float>(fSettings,"IMU.Frequency",found);
+        bool bIsImuSensor = (sensor_ == System::IMU_MONOCULAR || sensor_ == System::IMU_STEREO || sensor_ == System::IMU_RGBD || sensor_ == System::IMU_MULTI || sensor_ == System::MULTI);
+        noiseGyro_ = readParameter<float>(fSettings,"IMU.NoiseGyro",found,bIsImuSensor);
+        noiseAcc_ = readParameter<float>(fSettings,"IMU.NoiseAcc",found,bIsImuSensor);
+        gyroWalk_ = readParameter<float>(fSettings,"IMU.GyroWalk",found,bIsImuSensor);
+        accWalk_ = readParameter<float>(fSettings,"IMU.AccWalk",found,bIsImuSensor);
+        imuFrequency_ = readParameter<float>(fSettings,"IMU.Frequency",found,bIsImuSensor);
 
         cv::Mat cvTbc = readParameter<cv::Mat>(fSettings,"IMU.T_b_c1",found);
         Tbc_ = Converter::toSophus(cvTbc);
 
-        if (sensor_ == System::IMU_MULTI){
+        if (sensor_ == System::IMU_MULTI || sensor_ == System::MULTI){
             cv::Mat cvTbcl = readParameter<cv::Mat>(fSettings,"IMU.T_b_c3",found);
             Tbcl_ = Converter::toSophus(cvTbcl);
 
@@ -720,7 +721,7 @@ namespace ORB_SLAM3 {
         bf_ = b_ * P1.at<double>(0,0);
 
         //Update relative pose between camera 1 and IMU if necessary
-        if(sensor_ == System::IMU_STEREO || sensor_ == System::IMU_MULTI){
+        if(sensor_ == System::IMU_STEREO || sensor_ == System::IMU_MULTI || sensor_ == System::MULTI){
             Eigen::Matrix3f eigenR_r1_u1;
             cv::cv2eigen(R_r1_u1,eigenR_r1_u1);
             Sophus::SE3f T_r1_u1(eigenR_r1_u1,Eigen::Vector3f::Zero());
@@ -775,7 +776,7 @@ namespace ORB_SLAM3 {
             }
         }
 
-        if(settings.sensor_ == System::IMU_MULTI){
+        if(settings.sensor_ == System::IMU_MULTI || settings.sensor_ == System::MULTI){
             output << "\t-Camera 3 parameters (";
             if(settings.cameraType_ == Settings::PinHole || settings.cameraType_ ==  Settings::Rectified){
                 output << "Pinhole";

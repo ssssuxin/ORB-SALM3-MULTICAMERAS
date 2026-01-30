@@ -255,6 +255,14 @@ add_executable(multi_inertial_euroc
 
 target_link_libraries(multi_inertial_euroc ${PROJECT_NAME})
 
+#Multi examples
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/Examples/Multi)
+
+add_executable(multi_euroc
+        Examples/Multi/multi_euroc.cc)
+
+target_link_libraries(multi_euroc ${PROJECT_NAME})
+
 if(realsense2_FOUND)
     add_executable(stereo_inertial_realsense_t265
             Examples/Stereo-Inertial/stereo_inertial_realsense_t265.cc)
