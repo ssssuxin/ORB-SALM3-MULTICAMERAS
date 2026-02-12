@@ -1591,7 +1591,7 @@ Sophus::SE3f Tracking::GrabImageMulti(const cv::Mat &imRectLeft, const cv::Mat &
         mCurrentFrame = Frame(mImGray,imGrayRight,imGraySideLeft,imGraySideRight,timestamp,
                               mpORBextractorLeft,mpORBextractorRight,mpORBextractorSideLeft,mpORBextractorSideRight,mbleft, mbright, mbsideleft, mbsideright,
                               mpORBVocabulary,mK,mDistCoef,mbf,mThDepth,mpCamera,mpCamera2,mpCamera3,mpCamera4,mTlr,mTlsl,mTlsr,&mLastFrame,*mpImuCalib);
-
+    //注释 实例化一个frame对象，并顺便提取了和管理好了（放在对应grid中） 4个图像的orb特征点
     mCurrentFrame.mNameFile = filename;
     mCurrentFrame.mnDataset = mnNumDataset;
 
@@ -1601,6 +1601,7 @@ Sophus::SE3f Tracking::GrabImageMulti(const cv::Mat &imRectLeft, const cv::Mat &
 #endif
 
     Track();
+    //注释 初始化了第一个关键帧，做了左右两相机的特征点匹配和三角化到map中
 
     if (mSensor == System::IMU_MULTI)
         return mCurrentFrame.GetImuPose();
@@ -1998,6 +1999,7 @@ void Tracking::Track()
             StereoInitialization();
         else if (mSensor == System::IMU_MULTI || mSensor == System::MULTI)
             MultiInitialization();
+        //注释 初始化了第一个关键帧，做了左右两相机的特征点匹配和三角化到map中
         else
             MonocularInitialization();
         //mpFrameDrawer->Update(this);
@@ -2567,27 +2569,30 @@ void Tracking::MultiInitialization()
 
         // Create KeyFrame
         KeyFrame *pKFini = new KeyFrame(mCurrentFrame, mpAtlas->GetCurrentMap(), mpKeyFrameDB);
-
+        //注释 输入信息包括了特征值和描述子（放在4个栅格三维向量中），初始化了MAP：包含当前任务的所有frame和mpoints
         // Insert KeyFrame in the map
         mpAtlas->AddKeyFrame(pKFini);
-
+        //注释 第一个关键帧被加入数据结构set中，并着重用一个变量抓住第一帧和最新一帧
         for (int i = 0; i < mCurrentFrame.Nleft; i++)
         {
             int rightIndex = mCurrentFrame.mvLeftToRightMatch[i];
             if (rightIndex != -1)
             {
                 Eigen::Vector3f x3D = mCurrentFrame.mvStereo3Dpoints[i];
+                //注释 左右相机成功匹配的特征点  并被三角化到当前帧中的坐标（以左相机为坐标原点）
 
                 MapPoint *pNewMP = new MapPoint(x3D, pKFini, mpAtlas->GetCurrentMap());
-
+                //注释 保留了世界坐标系下的坐标、来自于哪一关键帧、属于哪个map
                 pNewMP->AddObservation(pKFini, i);
                 pNewMP->AddObservation(pKFini, rightIndex + mCurrentFrame.Nleft);
 
                 pKFini->AddMapPoint(pNewMP, i);
                 pKFini->AddMapPoint(pNewMP, rightIndex + mCurrentFrame.Nleft);
-
+                //注释 mappoint和关键帧的相互标记
                 pNewMP->ComputeDistinctiveDescriptors();
+                //注释 选一个新的描述子来描述这个特征点（让这个新的描述符与左、右或其它视角的都相近）
                 pNewMP->UpdateNormalAndDepth();
+                //注释 记录该特征点的最佳观测fov方向、最佳观测距离、最佳观测角度
                 mpAtlas->AddMapPoint(pNewMP);
 
                 mCurrentFrame.mvpMapPoints[i] = pNewMP;

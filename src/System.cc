@@ -357,6 +357,7 @@ Sophus::SE3f System::TrackMulti(const cv::Mat &imLeft, const cv::Mat &imRight, c
         cv::resize(imSideRight,imSideRightToFeed,settings_->newImSize());
     }
     else{
+        //注释 demo这里没有做任何处理，直接复制了输入的图像
         imLeftToFeed = imLeft.clone();
         imRightToFeed = imRight.clone();
         imSideLeftToFeed = imSideLeft.clone();
@@ -364,6 +365,7 @@ Sophus::SE3f System::TrackMulti(const cv::Mat &imLeft, const cv::Mat &imRight, c
     }
 
     // Check mode change
+    //注释 这里是viewer线程与其它线程之间的沟通桥梁
     {
         unique_lock<mutex> lock(mMutexMode);
         if(mbActivateLocalizationMode)
@@ -408,7 +410,7 @@ Sophus::SE3f System::TrackMulti(const cv::Mat &imLeft, const cv::Mat &imRight, c
             mpTracker->GrabImuData(vImuMeas[i_imu]);
 
     Sophus::SE3f Twb = mpTracker->GrabImageMulti(imLeftToFeed,imRightToFeed,imSideLeftToFeed,imSideRightToFeed,timestamp,filename);
-
+    //注释 在里面初始化了map、第一个关键帧、mappoints   由于是第一个关键帧，这里得到的返回结果应该是000 000
     unique_lock<mutex> lock2(mMutexState);
     mTrackingState = mpTracker->mState;
     mTrackedMapPoints = mpTracker->mCurrentFrame.mvpMapPoints;

@@ -1,0 +1,17 @@
+{
+    "workbench.editor.enablePreview": false,
+    // "workbench.editor.showTabs": true
+    "C_Cpp.default.compileCommands": "${workspaceFolder}/build/compile_commands.json",
+    "C_Cpp.default.intelliSenseMode": "linux-gcc-x64",
+    "C_Cpp.default.cppStandard": "c++11",
+    "C_Cpp.default.cStandard": "c11",
+    "C_Cpp.errorSquiggles": "enabled",
+    "C_Cpp.workspaceParsingPriority": "highest",
+    "C_Cpp.intelliSenseUpdateDelay": 1000,
+    "files.associations": {
+        "*.h": "cpp",
+        "*.hpp": "cpp",
+        "*.cc": "cpp",
+        "*.cpp": "cpp"
+    }
+}

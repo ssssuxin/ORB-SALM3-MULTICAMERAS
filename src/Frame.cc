@@ -1328,11 +1328,11 @@ void Frame::ComputeMultiFishEyeMatches() {
     //Speed it up by matching keypoints in the lapping area
     vector<cv::KeyPoint> stereoLeft(mvKeys.begin() + monoLeft, mvKeys.end());
     vector<cv::KeyPoint> stereoRight(mvKeysRight.begin() + monoRight, mvKeysRight.end());
-
+    //注释 mvKeys和mvKeysRight都表示所有的各自图像的特征，其中 0 - monoLeft 或者 0 - monoRight是非重叠区域的特征，后面的才是重叠区域的特征
     if (mDescriptors.rows != 0 && mDescriptorsRight.rows != 0){
         cv::Mat stereoDescLeft = mDescriptors.rowRange(monoLeft, mDescriptors.rows);
         cv::Mat stereoDescRight = mDescriptorsRight.rowRange(monoRight, mDescriptorsRight.rows);
-
+        //注释 mDescriptors和mDescriptorsRight都表示所有的各自图像的特征，其中 0 - monoLeft 或者 0 - monoRight是非重叠区域的特征，后面的才是重叠区域的特征
         //TODO: for diffrent setup, sideward camera may have sufficient overlap for stereo matching
         mvLeftToRightMatch = vector<int>(Nleft,-1);
         mvRightToLeftMatch = vector<int>(Nright,-1);
@@ -1346,7 +1346,8 @@ void Frame::ComputeMultiFishEyeMatches() {
         vector<vector<cv::DMatch>> matches;
 
         BFmatcher.knnMatch(stereoDescLeft,stereoDescRight,matches,2);
-
+        //注释 matches是描述的匹配对，第一个维度每个元素描述左相机的某个特征点，和右相机的某个特征点的匹配关系（索引对）。
+        //注释 （具体操作是，每个元素是左相机固定某个特征点 和 右相机的两个（最优和次优）的特征点的匹配关系（用匹配汉明距离描述），将来匹配中最优的距离应该小于次优距离的80%）
         int nMatches = 0;
         int descMatches = 0;
 
@@ -1358,10 +1359,11 @@ void Frame::ComputeMultiFishEyeMatches() {
                 descMatches++;
                 float sigma1 = mvLevelSigma2[mvKeys[(*it)[0].queryIdx + monoLeft].octave], sigma2 = mvLevelSigma2[mvKeysRight[(*it)[0].trainIdx + monoRight].octave];
                 float depth = static_cast<KannalaBrandt8*>(mpCamera)->TriangulateMatches(mpCamera2,mvKeys[(*it)[0].queryIdx + monoLeft],mvKeysRight[(*it)[0].trainIdx + monoRight],mRlr,mtlr,sigma1,sigma2,p3D);
-                if(depth > 0.0001f){
+                if(depth > 0.0001f){//注释 depth必须大于一个很小的值，过滤掉一些明显错误的匹配
                     mvLeftToRightMatch[(*it)[0].queryIdx + monoLeft] = (*it)[0].trainIdx + monoRight;
                     mvRightToLeftMatch[(*it)[0].trainIdx + monoRight] = (*it)[0].queryIdx + monoLeft;
-                    mvStereo3Dpoints[(*it)[0].queryIdx + monoLeft] = p3D;
+                    //注释 用mvLeftToRightMatch和mvRightToLeftMatch 两个向量 相互标记匹配关系
+                    mvStereo3Dpoints[(*it)[0].queryIdx + monoLeft] = p3D;//注释 记录三角化后的三维点坐标（以左相机为坐标原点）
                     mvDepth[(*it)[0].queryIdx + monoLeft] = depth;
                     nMatches++;
                 }
@@ -1624,10 +1626,13 @@ Frame::Frame(const cv::Mat &imLeft, const cv::Mat &imRight, const cv::Mat &imSid
     mvbOutlier = vector<bool>(N,false);
 
     AssignFeaturesToGrid();
+    //注释 本身上面4个线程提取了4个向量，每个向量是每个相机的特征点集合； 
+    //注释 现在用4个新三维向量（1维：一个相机多个grid，2维：每个grid囊括多个特征点索引）， 描述：其中每个元素是一个向量，具体某个相机，被包含在某个grid中的哪些特征点  在 前面向量中的索引。
 
     mpMutexImu = new std::mutex();
 
     UndistortKeyPoints();
+    //注释 左前相机特征点坐标去畸变并保存在mvKeysUn中（其实在这个demo中会直接复制）
 
 }
 } //namespace ORB_SLAM

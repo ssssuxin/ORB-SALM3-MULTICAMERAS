@@ -1,0 +1,46 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}",
+                "${workspaceFolder}/include",
+                "${workspaceFolder}/include/CameraModels",
+                "${workspaceFolder}/src",
+                "${workspaceFolder}/Thirdparty",
+                "${workspaceFolder}/Thirdparty/Sophus",
+                "${workspaceFolder}/Thirdparty/Sophus/sophus",
+                "${workspaceFolder}/Thirdparty/DBoW2",
+                "${workspaceFolder}/Thirdparty/DBoW2/include",
+                "${workspaceFolder}/Thirdparty/g2o",
+                "${workspaceFolder}/Thirdparty/g2o/g2o",
+                "${workspaceFolder}/Thirdparty/g2o/g2o/core",
+                "${workspaceFolder}/Thirdparty/g2o/g2o/types",
+                "${workspaceFolder}/Thirdparty/g2o/g2o/stuff",
+                "${workspaceFolder}/include/*",
+                "${workspaceFolder}/include/System.h"
+            ],
+            "defines": [
+                "COMPILEDWITHC11"
+            ],
+            "compilerPath": "/usr/bin/g++",
+            "cStandard": "c11",
+            "cppStandard": "c++11",
+            "intelliSenseMode": "linux-gcc-x64",
+            "browse": {
+                "path": [
+                    "${workspaceFolder}",
+                    "${workspaceFolder}/include",
+                    "${workspaceFolder}/src",
+                    "${workspaceFolder}/Thirdparty"
+                ],
+                "limitSymbolsToIncludedHeaders": false,
+                "databaseFilename": "${workspaceFolder}/.vscode/browse.vc.db"
+            }
+        }
+    ],
+    "version": 4
+}
+
+
+

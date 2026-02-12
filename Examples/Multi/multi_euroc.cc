@@ -183,7 +183,7 @@ int main(int argc, char **argv)
             t_track = t_rect + t_resize + std::chrono::duration_cast<std::chrono::duration<double,std::milli> >(t2 - t1).count();
             SLAM.InsertTrackTime(t_track);
 #endif
-
+            //注释 这后面的for中几行是为了sleep  以让处理帧率符合视频帧率（即每秒20帧），实际实时使用可以去掉。
             double ttrack= std::chrono::duration_cast<std::chrono::duration<double> >(t2 - t1).count();
 
             vTimesTrack[ni]=ttrack;
